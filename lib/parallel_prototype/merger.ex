@@ -57,42 +57,42 @@ defmodule Merger do
   end
 
   def merge({from_1..to_1, count_1, fragment_1}, {from_2..to_2, count_2, fragment_2})
-    when from_1 <= to_1 and to_1 + 1 == to_2 and from_2 >= to_2 and count_1 >= count_2 do
+      when from_1 <= to_1 and to_1 + 1 == to_2 and from_2 >= to_2 and count_1 >= count_2 do
     {from_1..from_2, count_1 + count_2, fragment_1 ++ Enum.reverse(fragment_2)}
   end
 
   def merge({from_1..to_1, count_1, fragment_1}, {from_2..to_2, count_2, fragment_2})
-    when from_1 <= to_1 and to_1 + 1 == to_2 and from_2 >= to_2 and count_1 < count_2 do
+      when from_1 <= to_1 and to_1 + 1 == to_2 and from_2 >= to_2 and count_1 < count_2 do
     {from_2..from_1, count_1 + count_2, fragment_2 ++ Enum.reverse(fragment_1)}
   end
 
   def merge({from_1..to_1, count_1, fragment_1}, {from_2..to_2, count_2, fragment_2})
-    when from_1 >= to_1 and from_1 + 1 == from_2 and from_2 <= to_2 and count_1 >= count_2 do
-    {to_2..to_1, count_1 + count_2, Enum.reverse(fragment_2) ++ fragment_1}    
+      when from_1 >= to_1 and from_1 + 1 == from_2 and from_2 <= to_2 and count_1 >= count_2 do
+    {to_2..to_1, count_1 + count_2, Enum.reverse(fragment_2) ++ fragment_1}
   end
 
   def merge({from_1..to_1, count_1, fragment_1}, {from_2..to_2, count_2, fragment_2})
-    when from_1 >= to_1 and from_1 + 1 == from_2 and from_2 <= to_2 and count_1 < count_2 do
-    {to_1..to_2, count_1 + count_2, Enum.reverse(fragment_1) ++ fragment_2}    
+      when from_1 >= to_1 and from_1 + 1 == from_2 and from_2 <= to_2 and count_1 < count_2 do
+    {to_1..to_2, count_1 + count_2, Enum.reverse(fragment_1) ++ fragment_2}
   end
 
   def merge({from_1..to_1, count_1, fragment_1}, {from_2..to_2, count_2, fragment_2})
-    when from_1 >= to_1 and to_1 - 1 == to_2 and from_2 <= to_2 and count_1 <= count_2 do
-    {from_2..from_1, count_1 + count_2, fragment_2 ++ Enum.reverse(fragment_1)}    
+      when from_1 >= to_1 and to_1 - 1 == to_2 and from_2 <= to_2 and count_1 <= count_2 do
+    {from_2..from_1, count_1 + count_2, fragment_2 ++ Enum.reverse(fragment_1)}
   end
 
   def merge({from_1..to_1, count_1, fragment_1}, {from_2..to_2, count_2, fragment_2})
-    when from_1 >= to_1 and to_1 - 1 == to_2 and from_2 <= to_2 and count_1 > count_2 do
-    {from_1..from_2, count_1 + count_2, fragment_1 ++ Enum.reverse(fragment_2)}    
+      when from_1 >= to_1 and to_1 - 1 == to_2 and from_2 <= to_2 and count_1 > count_2 do
+    {from_1..from_2, count_1 + count_2, fragment_1 ++ Enum.reverse(fragment_2)}
   end
 
   def merge({from_1..to_1, count_1, fragment_1}, {from_2..to_2, count_2, fragment_2})
-    when from_1 <= to_1 and from_1 - 1 == from_2 and from_2 >= to_2 and count_1 <= count_2 do
-    {to_1..to_2, count_1 + count_2, Enum.reverse(fragment_1) ++ fragment_2}    
+      when from_1 <= to_1 and from_1 - 1 == from_2 and from_2 >= to_2 and count_1 <= count_2 do
+    {to_1..to_2, count_1 + count_2, Enum.reverse(fragment_1) ++ fragment_2}
   end
 
   def merge({from_1..to_1, count_1, fragment_1}, {from_2..to_2, count_2, fragment_2})
-    when from_1 <= to_1 and from_1 - 1 == from_2 and from_2 >= to_2 and count_1 > count_2 do
-    {to_2..to_1, count_1 + count_2, Enum.reverse(fragment_2) ++ fragment_1}    
+      when from_1 <= to_1 and from_1 - 1 == from_2 and from_2 >= to_2 and count_1 > count_2 do
+    {to_2..to_1, count_1 + count_2, Enum.reverse(fragment_2) ++ fragment_1}
   end
 end
