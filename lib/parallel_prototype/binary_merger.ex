@@ -34,4 +34,19 @@ defmodule BinaryMerger do
       Merger.merge(tail, r)
     end
   end
+
+  def insert(
+        [],
+        l = [{_from_head.._to_head, _count_head, _fragment_head} | _tail]
+      ) do
+    l
+  end
+
+  def insert(
+        list,
+        [head = {_from_head.._to_head, _count_head, _fragment_head} | tail]
+      ) do
+    insert(list, [head])
+    |> insert(tail)
+  end
 end

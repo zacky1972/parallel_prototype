@@ -3,12 +3,47 @@ defmodule ParallelBinaryMergerTest do
   doctest ParallelBinaryMerger
 
   test "single" do
-  	pid = spawn(ParallelBinaryMerger, :receive_insert, [self(), 1..1])
-  	element_1 = MergerHelper.element(1)
-  	send(pid, element_1)
-  	receive do
-  	  e -> assert e == element_1
-  	after 1000 -> assert false
-  	end
+    pid = spawn(ParallelBinaryMerger, :receive_insert, [self(), 1..1])
+    element_1 = MergerHelper.element(1)
+    send(pid, element_1)
+
+    receive do
+      e -> assert e == element_1
+    after
+      1000 -> assert false
+    end
+  end
+
+  test "10 parallel" do
+    1..10
+    |> Enum.map(fn i ->
+      {spawn(ParallelBinaryMerger, :receive_insert, [
+         self(),
+         1..10 |> Enum.map(&(&1 + (i - 1) * 10))
+       ]), i}
+    end)
+    |> Enum.each(fn {pid, i} ->
+      send(
+        pid,
+        1..10
+        |> Enum.map(&MergerHelper.element(&1 + (i - 1) * 10))
+        |> List.flatten()
+      )
+    end)
+
+    ParallelBinaryMerger.receive_insert(self(), 1..100)
+
+    receive do
+      e ->
+        assert e == [
+                 {
+                   1..100,
+                   1000,
+                   Enum.reduce(1..100, [], fn _, acc -> Enum.to_list(1..10) ++ acc end)
+                 }
+               ]
+    after
+      1000 -> assert false
+    end
   end
 end
