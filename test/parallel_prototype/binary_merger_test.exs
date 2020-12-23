@@ -4,7 +4,7 @@ defmodule BinaryMergerTest do
 
   defp ascending do
     Enum.reduce(
-      Enum.map(1..100, &MergerHelper.element(&1)),
+      Enum.map(1..100, &MergerHelper.element(&1, 0)),
       [],
       fn x, acc -> BinaryMerger.insert(acc, x) end
     )
@@ -12,7 +12,7 @@ defmodule BinaryMergerTest do
 
   defp descending do
     Enum.reduce(
-      Enum.map(100..1, &MergerHelper.element(&1)),
+      Enum.map(100..1, &MergerHelper.element(&1, 0)),
       [],
       fn x, acc -> BinaryMerger.insert(acc, x) end
     )
@@ -20,7 +20,7 @@ defmodule BinaryMergerTest do
 
   defp random do
     Enum.reduce(
-      1..100 |> Enum.shuffle() |> Enum.map(&MergerHelper.element(&1)),
+      1..100 |> Enum.shuffle() |> Enum.map(&MergerHelper.element(&1, 0)),
       [],
       fn x, acc -> BinaryMerger.insert(acc, x) end
     )
