@@ -2,11 +2,9 @@ defmodule BinaryMergerTest do
   use ExUnit.Case
   doctest BinaryMerger
 
-  defp element(id), do: [{id..id, 10, Enum.to_list(1..10)}]
-
   defp ascending do
     Enum.reduce(
-      Enum.map(1..100, &element(&1)),
+      Enum.map(1..100, &MergerHelper.element(&1)),
       [],
       fn x, acc -> BinaryMerger.insert(acc, x) end
     )
@@ -14,7 +12,7 @@ defmodule BinaryMergerTest do
 
   defp descending do
     Enum.reduce(
-      Enum.map(100..1, &element(&1)),
+      Enum.map(100..1, &MergerHelper.element(&1)),
       [],
       fn x, acc -> BinaryMerger.insert(acc, x) end
     )
@@ -22,7 +20,7 @@ defmodule BinaryMergerTest do
 
   defp random do
     Enum.reduce(
-      1..100 |> Enum.shuffle() |> Enum.map(&element(&1)),
+      1..100 |> Enum.shuffle() |> Enum.map(&MergerHelper.element(&1)),
       [],
       fn x, acc -> BinaryMerger.insert(acc, x) end
     )
