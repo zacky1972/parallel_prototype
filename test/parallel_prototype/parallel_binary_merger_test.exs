@@ -49,7 +49,7 @@ defmodule ParallelBinaryMergerTest do
   end
 
   test "10 parallel dec" do
-    1..10
+    10..1
     |> Enum.map(fn i ->
       {spawn(ParallelBinaryMerger, :receive_insert, [
          self(),
@@ -59,7 +59,7 @@ defmodule ParallelBinaryMergerTest do
     |> Enum.each(fn {pid, i} ->
       send(
         pid,
-        1..10
+        10..1
         |> Enum.map(&MergerHelper.element(&1 + (i - 1) * 10, (&1 - 1) * 10 + (i - 1) * 100))
         |> List.flatten()
       )
@@ -80,4 +80,5 @@ defmodule ParallelBinaryMergerTest do
       1000 -> assert false
     end
   end
+
 end
