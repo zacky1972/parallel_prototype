@@ -53,7 +53,7 @@ defmodule Merger do
           list({Range.t(), non_neg_integer, list})
         ) ::
           list({Range.t(), non_neg_integer, list})
-  def merge([{from_1..to_1, count_1, fragment_1}], [{from_2..to_2, count_2, fragment_2}]) do
+  def merge(list_1 = [{from_1..to_1, count_1, fragment_1}], list_2 = [{from_2..to_2, count_2, fragment_2}]) do
     cond do
       from_1 <= to_1 and from_2 <= to_2 ->
         cond do
@@ -68,6 +68,12 @@ defmodule Merger do
 
           to_2 < from_1 ->
             [{from_2..to_2, count_2, fragment_2}, {from_1..to_1, count_1, fragment_1}]
+
+          from_1 <= from_2 and to_2 <= to_1 ->
+            list_1
+
+          from_2 <= from_1 and to_1 <= to_2 ->
+            list_2
         end
 
       from_1 > to_1 and from_2 <= to_2 ->
@@ -133,9 +139,9 @@ defmodule Merger do
     end
   end
 
-  def merge([], i), do: i
+  def merge([], i) when is_list(i), do: i
 
-  def merge([head | tail], i) do
+  def merge([head | tail], i) when is_list(i) do
     r = merge([head], i)
 
     if Enum.count(r) > 1 do
