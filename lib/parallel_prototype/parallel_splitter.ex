@@ -4,6 +4,17 @@ defmodule ParallelSplitter do
   """
 
   @doc """
+  Returns list of processes or tuples of a process and a reference 
+  that spawns the given function `fun` from module `mod`, 
+  passing `pid` and a list containing `threshold` elements each,
+  according to the given options.
+
+  The result depends on the given options. 
+  In particular, if `:monitor` is given as an option,
+  it will return list of tuples containing the PID and the monitoring reference,
+  otherwise just the spawned process PID.
+
+  It also accepts extra options, for the list of available options check `:erlang.spawn_opt/4`. 
   """
   @spec split({module(), atom()}, pid(), Enum.t(), pos_integer(), Process.spawn_opts()) ::
           [pid() | {pid(), reference()}]
