@@ -70,18 +70,18 @@ defmodule ParallelBinaryMerger do
       {:DOWN, _ref, :process, _pid, :normal} ->
         receive_insert_sub_fun(list, result, fallback)
 
-      #{:DOWN, _ref, :process, pid, _} ->
-      #  {_, id} = 
-      #    Enum.find(list, 
-      #      fn 
-      #        {{opid, _ref}, _id} -> pid == opid
-      #        {opid, _id} -> pid == opid 
-      #      end
-      #    )
+      {:DOWN, _ref, :process, pid, _} ->
+        {_, id} = 
+          Enum.find(list, 
+            fn 
+              {{opid, _ref}, _id} -> pid == opid
+              {opid, _id} -> pid == opid 
+            end
+          )
 
-      #  fragment = fallback.(id)
-      #  send(self(), [{id..id, Enum.count(fragment), fragment}])
-      #  receive_insert_sub_fun(list, result, fallback)
+        fragment = fallback.(id)
+        send(self(), [{id..id, Enum.count(fragment), fragment}])
+        receive_insert_sub_fun(list, result, fallback)
 
     after
       500 ->
