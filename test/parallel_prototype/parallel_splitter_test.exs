@@ -17,11 +17,15 @@ defmodule ParallelSplitterTest do
       1000 ->
         assert false
     end
+
+    assert ParallelSplitter.range(1..10, 10) == 0..0
   end
 
   test "double" do
     [{{_pid1, _ref1}, 1}, {{_pid0, _ref0}, 0}] =
       ParallelSplitter.split({SplitterHelper, :count}, self(), 0, 1..20, 10, [], [:monitor])
+
+    assert ParallelSplitter.range(1..20, 10) == 1..0
 
     receive_single()
     receive_single()
