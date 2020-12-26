@@ -97,6 +97,12 @@ defmodule Merger do
 
           to_2 < to_1 ->
             [{from_2..to_2, count_2, fragment_2}, {from_1..to_1, count_1, fragment_1}]
+
+          to_1 <= from_2 and to_2 <= from_1 ->
+            list_1
+
+          from_2 <= to_1 and from_1 <= to_2 ->
+            list_2
         end
 
       from_1 <= to_1 and from_2 > to_2 ->
@@ -120,6 +126,12 @@ defmodule Merger do
 
           to_2 < to_1 ->
             [{from_2..to_2, count_2, fragment_2}, {from_1..to_1, count_1, fragment_1}]
+
+          from_1 <= to_2 and from_2 <= to_1 ->
+            list_1
+
+          to_2 <= from_1 and to_1 <= from_2 ->
+            list_2
         end
 
       from_1 > to_1 and from_2 > to_2 ->
