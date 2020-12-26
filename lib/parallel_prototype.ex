@@ -48,14 +48,14 @@ defmodule ParallelPrototype do
         [:monitor]
       )
 
-    [{_from.._to, _count, result}] =
-      ParallelBinaryMerger.receive_insert_fun(
-        self(),
-        p_list,
-        fallback(enumerable, threshold, fun)
-      )
-
-    result
+    case ParallelBinaryMerger.receive_insert_fun(
+           self(),
+           p_list,
+           fallback(enumerable, threshold, fun)
+         ) do
+      [{_from.._to, _count, result}] -> result
+      _ -> Enum.map(enumerable, fun)
+    end
   end
 
   @spec fallback(Enum.t(), pos_integer(), (Enum.element() -> any())) ::
