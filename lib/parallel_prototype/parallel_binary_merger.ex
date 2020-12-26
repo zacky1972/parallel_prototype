@@ -12,7 +12,7 @@ defmodule ParallelBinaryMerger do
           list({Range.t(), non_neg_integer, list})
   def receive_insert_fun(pid, list, fallback) do
     result = receive_insert_sub_fun(list, [], fallback)
-    send(pid, result)    
+    send(pid, result)
   end
 
   @doc """
@@ -44,7 +44,6 @@ defmodule ParallelBinaryMerger do
 
       {:DOWN, _ref, :process, _pid, :normal} ->
         receive_insert_sub(list, result)
-
     after
       500 ->
         result
@@ -71,18 +70,18 @@ defmodule ParallelBinaryMerger do
         receive_insert_sub_fun(list, result, fallback)
 
       {:DOWN, _ref, :process, pid, _} ->
-        {_, id} = 
-          Enum.find(list, 
-            fn 
+        {_, id} =
+          Enum.find(
+            list,
+            fn
               {{opid, _ref}, _id} -> pid == opid
-              {opid, _id} -> pid == opid 
+              {opid, _id} -> pid == opid
             end
           )
 
         fragment = fallback.(id)
         send(self(), [{id..id, Enum.count(fragment), fragment}])
         receive_insert_sub_fun(list, result, fallback)
-
     after
       500 ->
         result

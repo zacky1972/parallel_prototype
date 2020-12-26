@@ -53,7 +53,10 @@ defmodule Merger do
           list({Range.t(), non_neg_integer, list})
         ) ::
           list({Range.t(), non_neg_integer, list})
-  def merge(list_1 = [{from_1..to_1, count_1, fragment_1}], list_2 = [{from_2..to_2, count_2, fragment_2}]) do
+  def merge(
+        list_1 = [{from_1..to_1, count_1, fragment_1}],
+        list_2 = [{from_2..to_2, count_2, fragment_2}]
+      ) do
     cond do
       from_1 <= to_1 and from_2 <= to_2 ->
         cond do
