@@ -9,7 +9,13 @@ defmodule ParallelPrototype.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       dialyzer: [plt_add_deps: :transitive],
-      elixirc_paths: elixirc_paths(Mix.env())
+      elixirc_paths: elixirc_paths(Mix.env()),
+
+      # Docs
+      docs: [
+        main: "ParallelPrototype",
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -23,7 +29,8 @@ defmodule ParallelPrototype.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false}
+      {:dialyxir, "~> 0.5.0", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.23", only: :dev, runtime: false}
     ]
   end
 
