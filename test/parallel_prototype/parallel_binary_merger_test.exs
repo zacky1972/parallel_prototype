@@ -80,5 +80,4 @@ defmodule ParallelBinaryMergerTest do
       1000 -> assert false
     end
   end
-
 end
