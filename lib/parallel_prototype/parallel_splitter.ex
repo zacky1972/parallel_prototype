@@ -4,7 +4,7 @@ defmodule ParallelSplitter do
   """
 
   @doc """
-  Returns list of processes or tuples of a process and a reference 
+  Returns a reversed list of tuples of a process or tuple of a process and a reference, and identity of the process 
   that spawns the given function `fun` from module `mod`, 
   passing `pid`, a list containing `threshold` elements each, and `id` of the list,
   according to the given options.
@@ -17,15 +17,13 @@ defmodule ParallelSplitter do
   It also accepts extra options, for the list of available options check `:erlang.spawn_opt/4`. 
   """
   @spec split({module(), atom()}, pid(), non_neg_integer(), Enum.t(), pos_integer(), Process.spawn_opts()) ::
-          [pid() | {pid(), reference()}]
+          [{pid(), non_neg_integer()} | {{pid(), reference()}, non_neg_integer()}]
   def split({_, _}, _, _, [], _, _), do: []
 
   def split({mod, fun}, pid, id, enumerable, threshold, opts) do
     {heads, tail} = Enum.split(enumerable, threshold)
 
-    [
-      Process.spawn(mod, fun, [pid, heads, id], opts)
-      | split({mod, fun}, pid, id + 1, tail, threshold, opts)
-    ]
+    split({mod, fun}, pid, id + 1, tail, threshold, opts)
+    ++ [{Process.spawn(mod, fun, [pid, heads, id], opts), id}]
   end
 end
