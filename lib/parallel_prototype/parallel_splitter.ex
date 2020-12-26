@@ -39,6 +39,6 @@ defmodule ParallelSplitter do
   """
   @spec range(Enum.t(), pos_integer()) :: Range.t()
   def range(collection, threshold) do
-    div((Enum.count(collection) - 1), threshold)..0
+    div(Enum.count(collection) - 1, threshold)..0
   end
 end

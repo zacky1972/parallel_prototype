@@ -8,7 +8,7 @@ defmodule ParallelBinaryMerger do
   @doc """
   Documentation for `receive_insert`.
   """
-  @spec receive_insert(pid, list({Range.t(), non_neg_integer, list})) ::
+  @spec receive_insert(pid, Range.t() | list()) ::
           list({Range.t(), non_neg_integer, list})
   def receive_insert(pid, from..to) do
     receive_insert(pid, Enum.to_list(from..to))
@@ -32,10 +32,11 @@ defmodule ParallelBinaryMerger do
         r = BinaryMerger.insert(result, l)
         receive_insert_sub(remove(list, l), r)
     after
-      1000 ->
-        raise(
-          "Timeout list = #{inspect(list, charlists: :as_lists)}, result = #{inspect(result)}"
-        )
+      500 ->
+        result
+        # raise(
+        #   "Timeout list = #{inspect(list, charlists: :as_lists)}, result = #{inspect(result)}"
+        # )
     end
   end
 
