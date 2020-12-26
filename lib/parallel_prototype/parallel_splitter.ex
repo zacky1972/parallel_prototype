@@ -20,7 +20,7 @@ defmodule ParallelSplitter do
           [{pid(), non_neg_integer()} | {{pid(), reference()}, non_neg_integer()}]
   def split({_, _}, _, _, [], _, _, _), do: []
 
-  def split({mod, fun}, pid, id, enumerable, threshold, arg \\ [], opts) do
+  def split({mod, fun}, pid, id, enumerable, threshold, arg, opts) do
     {heads, tail} = Enum.split(enumerable, threshold)
 
     split({mod, fun}, pid, id + 1, tail, threshold, arg, opts)
