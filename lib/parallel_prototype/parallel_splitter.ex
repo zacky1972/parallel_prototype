@@ -3,6 +3,8 @@ defmodule ParallelSplitter do
   Documentation for `ParallelSplitter`.
   """
 
+  @type t :: [{pid(), non_neg_integer()} | {{pid(), reference()}, non_neg_integer()}]
+
   @doc """
   Returns a reversed list of tuples of a process or tuple of a process and a reference, and identity of the process 
   that spawns the given function `fun` from module `mod`, 
@@ -24,8 +26,7 @@ defmodule ParallelSplitter do
           pos_integer(),
           any(),
           Process.spawn_opts()
-        ) ::
-          [{pid(), non_neg_integer()} | {{pid(), reference()}, non_neg_integer()}]
+        ) :: t()
   def split({_, _}, _, _, [], _, _, _), do: []
 
   def split({mod, fun}, pid, id, enumerable, threshold, arg, opts) do

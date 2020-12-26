@@ -24,45 +24,17 @@ defmodule ParallelPrototype do
         [:monitor]
       )
 
-    ParallelBinaryMerger.receive_insert(self(), ParallelSplitter.range(enumerable, threshold))
-
-    [{_from.._to, _count, result}] = receive_result([], p_list, enumerable, threshold, fun)
-
+    [{_from.._to, _count, result}] = ParallelBinaryMerger.receive_insert_fun(self(), p_list, fallback(enumerable, threshold, fun))
     result
   end
 
-  defp receive_result(result, p_list, enumerable, threshold, fun) do
-    receive do
-      {:DOWN, _ref, :process, pid, :normal} ->
-        receive_result(result, remove(p_list, pid), enumerable, threshold, fun)
-
-      {:DOWN, _ref, :process, pid, _} ->
-        {{_pid, _ref}, id} = find(p_list, pid)
-        fallback_result = [{id..id, threshold, fallback(enumerable, id, threshold, fun)}]
-        result = BinaryMerger.insert(result, fallback_result)
-        receive_result(result, remove(p_list, pid), enumerable, threshold, fun)
-
-      list = [{_from.._to, _count, _fragment}] ->
-        BinaryMerger.insert(result, list)
-    after
-      500 ->
-        result
+  @spec fallback(Enum.t(), pos_integer(), (Enum.element() -> any())) :: (non_neg_integer() -> list())
+  def fallback(enumerable, threshold, fun) do
+    fn id ->
+      enumerable
+      |> Enum.slice(id * threshold, threshold)
+      |> Enum.map(fun)
     end
-  end
-
-  defp remove(p_list, o_pid) do
-    Enum.filter(p_list, fn {{pid, _ref}, _id} -> o_pid != pid end)
-  end
-
-  defp find(p_list, o_pid) do
-    Enum.find(p_list, fn {{pid, _ref}, _id} -> o_pid == pid end)
-  end
-
-  @spec fallback(Enum.t(), non_neg_integer(), pos_integer(), (Enum.element() -> any())) :: list()
-  def fallback(enumerable, id, threshold, fun) do
-    enumerable
-    |> Enum.slice(id * threshold, threshold)
-    |> Enum.map(fun)
   end
 
   @spec sub_enum(pid(), Enum.t(), pos_integer(), (Enum.element() -> any())) ::
